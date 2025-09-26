@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Post SeekSocial</title>
+    <link rel="stylesheet" href="/seek-social/css/style.css" />
+    <script type="module" src="../js/single-post.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+ <main>
+      <p style="margin:.25rem 0 1rem">
+        <a href="./index.html">← Back to feed</a>
+      </p>
+
+      <section id="post" aria-live="polite"></section>
+
+      <section style="margin-top:1rem">
+        <h2 style="margin-bottom:.5rem">Comments</h2>
+
+        <form id="commentForm" class="comment-form">
+          <label for="commentBody" class="sr-only">Write a comment</label>
+          <input id="commentBody" name="body" type="text" placeholder="Write a comment…" maxlength="280" required />
+          <button type="submit">Send</button>
+        </form>
+
+        <ul id="comments" style="list-style:none; padding:0; margin:.75rem 0 0"></ul>
+      </section>
+    </main>
+    <script src="/seek-social/js/navbar.js" defer></script>
+  </body>
+</html>
+

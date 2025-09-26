@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit post SeekSocial</title>
+    <link rel="stylesheet" href="/seek-social/css/style.css" />
+    <script type="module" src="../js/edit-post.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+<main>
+      <h1>Edit post</h1>
+
+      <form id="postForm" class="card" style="max-width:720px">
+        <div class="field">
+          <label for="title">Title <span aria-hidden="true">*</span></label>
+          <input id="title" name="title" type="text" required minlength="1" maxlength="120" />
+        </div>
+
+        <div class="field">
+          <label for="body">Body</label>
+          <textarea id="body" name="body" rows="6" maxlength="2000"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="mediaUrl">Image URL</label>
+          <input id="mediaUrl" name="mediaUrl" type="url" placeholder="https://…" />
+          <small class="hint">Optional. Must be a public http/https URL.</small>
+        </div>
+
+        <div class="field">
+          <label for="mediaAlt">Image alt text</label>
+          <input id="mediaAlt" name="mediaAlt" type="text" maxlength="120" />
+        </div>
+
+        <div class="field">
+          <label for="tags">Tags</label>
+          <input id="tags" name="tags" type="text" placeholder="comma,separated,tags" maxlength="140" />
+        </div>
+
+        <div class="actions">
+          <button id="saveBtn" type="submit">Save changes</button>
+          <button id="deleteBtn" type="button" class="danger">Delete</button>
+          <a class="btn-link" id="viewLink" href="./single.html">Cancel</a>
+        </div>
+
+        <p id="formError" class="error" hidden></p>
+      </form>
+    </main>
+    <script src="/seek-social/js/navbar.js" defer></script>
+  </body>
+</html>

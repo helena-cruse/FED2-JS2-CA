@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Feed SeekSocial</title>
+  <link rel="stylesheet" href="/seek-social/css/style.css" />
+</head>
+<body>
+    <div id="site-header"></div>
+  <main>
+    <h1>Feed</h1>
+
+    <form id="search" role="search" aria-label="Search posts" style="margin-bottom:1rem">
+      <label for="q" class="visually-hidden">Search</label>
+      <input
+        id="q"
+        name="q"
+        type="search"
+        placeholder="Search posts…"
+        autocomplete="off"
+        aria-describedby="searchHelp"
+      />
+      <button type="submit">Search</button>
+      <div id="searchHelp" class="sr-only">Type a query and press Search to filter posts</div>
+    </form>
+
+    <section id="feed" aria-live="polite" aria-busy="false"></section>
+
+    <div style="margin: 1rem 0">
+      <button id="loadMore" hidden type="button">Load more</button>
+    </div>
+  </main>
+
+  <script type="module" src="../js/posts.js"></script>
+  <script src="/seek-social/js/navbar.js" defer></script>
+</body>
+</html>
+

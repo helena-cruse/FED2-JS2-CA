@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>User profile SeekSocial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/seek-social/css/style.css" />
+  <script type="module" src="../js/profile-user.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+<main>
+    <h1 id="pageTitle">Profile</h1>
+
+    <section id="header" class="card" aria-live="polite" style="max-width:900px">
+    </section>
+
+    <section style="margin-top:1rem">
+      <h2 style="margin-bottom:.5rem">Posts</h2>
+      <div id="userPosts" aria-live="polite"></div>
+      <div style="margin: 1rem 0">
+        <button id="loadMore" hidden>Load more</button>
+      </div>
+    </section>
+  </main>
+  <script src="/seek-social/js/navbar.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New post SeekSocial</title>
+    <link rel="stylesheet" href="/seek-social/css/style.css" />
+    <script type="module" src="../js/new-post.js"></script>
+  </head>
+  <body>
+    <div id="site-header"></div>
+
+
+    <main>
+      <h1>New post</h1>
+
+      <form id="postForm" class="card" style="max-width:720px">
+        <div class="field">
+          <label for="title">Title <span aria-hidden="true">*</span></label>
+          <input id="title" name="title" type="text" required minlength="1" maxlength="120" autofocus />
+        </div>
+
+        <div class="field">
+          <label for="body">Body</label>
+          <textarea id="body" name="body" rows="6" maxlength="2000" placeholder="Write something…"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="mediaUrl">Image URL</label>
+          <input id="mediaUrl" name="mediaUrl" type="url" placeholder="https://…" />
+          <small class="hint">Optional. Must be a full URL (http/https).</small>
+        </div>
+
+        <div class="field">
+          <label for="mediaAlt">Image alt text</label>
+          <input id="mediaAlt" name="mediaAlt" type="text" maxlength="120" />
+        </div>
+
+        <div class="field">
+          <label for="tags">Tags</label>
+          <input id="tags" name="tags" type="text" placeholder="comma,separated,tags" maxlength="140" />
+          <small class="hint">Optional. Comma-separated (e.g. travel,summer,2025).</small>
+        </div>
+
+        <div class="actions">
+          <button id="createBtn" type="submit">Publish</button>
+          <a class="btn-link" href="./index.html">Cancel</a>
+        </div>
+
+        <p id="formError" class="error" hidden></p>
+      </form>
+    </main>
+    <script src="/seek-social/js/navbar.js" defer></script>
+  </body>
+</html>

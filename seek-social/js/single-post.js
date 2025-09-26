@@ -1,4 +1,3 @@
-// seek-social/js/single-post.js
 import { fetchJson, getToken } from "./api.js";
 
 const postEl = document.getElementById("post");
@@ -89,7 +88,6 @@ async function loadPost() {
     postEl.innerHTML = renderPost(p);
     renderComments(p.comments || p._comments || []);
 
-    // Vis "Edit post" kun for eier
     try {
       const token = getToken();
       if (token) {
@@ -119,7 +117,6 @@ async function loadPost() {
   }
 }
 
-// Like toggle: PUT /react/:emoji (ingen body)
 postEl.addEventListener("click", async (e) => {
   const btn = e.target.closest("#likeBtn");
   if (!btn) return;
@@ -134,7 +131,6 @@ postEl.addEventListener("click", async (e) => {
   } finally { btn.disabled = false; }
 });
 
-// Ny kommentar
 commentForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const text = commentBody.value.trim();
@@ -160,5 +156,4 @@ commentForm.addEventListener("submit", async (e) => {
   } finally { submit.disabled = false; }
 });
 
-// Init
 loadPost();

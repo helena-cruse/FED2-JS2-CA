@@ -1,4 +1,3 @@
-// Minimal "My profile" redirect → bruker samme side som andre profiler
 import { getToken } from "./api.js";
 
 function decodeNameFromToken() {

@@ -1,10 +1,9 @@
-// seek-social/js/profile-user.js
 import { fetchJson, getToken } from "./api.js";
 
 const pageTitle   = document.getElementById("pageTitle");
-const headerEl    = document.getElementById("header");       // <section id="header">
-const postsEl     = document.getElementById("userPosts");    // <div id="userPosts">
-const loadMoreBtn = document.getElementById("loadMore");     // <button id="loadMore">
+const headerEl    = document.getElementById("header");
+const postsEl     = document.getElementById("userPosts");
+const loadMoreBtn = document.getElementById("loadMore");
 
 const params   = new URLSearchParams(location.search);
 const username = params.get("name");
@@ -16,7 +15,7 @@ const state = {
   offset: 0,
   hasMore: true,
   isLoading: false,
-  followers: [],   // ← nytt
+  followers: [],
 };
 
 function decodeMe() {
@@ -71,7 +70,6 @@ function setLoading(b) {
 }
 
 function renderFollowersPanel() {
-  // Bygg panel kun hvis vi har en container i header (vi lager den like under).
   const panel = headerEl.querySelector("#followersPanel");
   if (!panel) return;
 
@@ -107,7 +105,6 @@ function renderHeader(profile, isFollowing) {
     ? `<button id="followBtn" data-following="${isFollowing ? "1" : "0"}">${isFollowing ? "Unfollow" : "Follow"}</button>`
     : "";
 
-  // Followers-knapp vises kun hvis count > 0 (ellers er panelet tomt)
   const followersBtn = followers > 0
     ? `<button id="toggleFollowers" aria-expanded="false" style="margin-left:.5rem">Followers (${followers})</button>`
     : `<span style="margin-left:.5rem;color:#666">Followers ${followers}</span>`;
@@ -128,7 +125,6 @@ function renderHeader(profile, isFollowing) {
     </div>
   `;
 
-  // Render panel-innhold (hold det hidden til bruker åpner)
   renderFollowersPanel();
 }
 
@@ -209,9 +205,7 @@ async function loadPosts({ append = false } = {}) {
   }
 }
 
-// Følg/avfølg + toggle followers-panel
 headerEl.addEventListener("click", async (e) => {
-  // Toggle followers
   const toggle = e.target.closest("#toggleFollowers");
   if (toggle) {
     const panel = headerEl.querySelector("#followersPanel");
@@ -228,7 +222,6 @@ headerEl.addEventListener("click", async (e) => {
     return;
   }
 
-  // Follow/Unfollow
   const btn = e.target.closest("#followBtn");
   if (!btn) return;
 
@@ -246,10 +239,9 @@ headerEl.addEventListener("click", async (e) => {
   btn.disabled = true;
   try {
     await fetchJson(url, { method: "PUT" });
-    await loadProfile(); // oppdater knapp + counts + followers-lista
+    await loadProfile();
   } catch (err) {
     console.error(err);
-    // fallback for miljø som kun har toggle via /follow
     if (isFollowing && (err.status === 404 || /not found/i.test(err.message || ""))) {
       try {
         await fetchJson(`${base}/follow`, { method: "PUT" });

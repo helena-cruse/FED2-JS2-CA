@@ -1,4 +1,3 @@
-// seek-social/js/profile.js
 import { fetchJson, getToken } from "./api.js";
 
 const whoEl = document.getElementById("who");
@@ -6,8 +5,6 @@ const listEl = document.getElementById("myPosts");
 const loadMoreBtn = document.getElementById("loadMore");
 
 const state = { name: null, limit: 20, offset: 0, hasMore: true, isLoading: false };
-
-/* ----------------- helpers ----------------- */
 
 function decodeNameFromToken() {
   const token = getToken();
@@ -65,8 +62,6 @@ function setLoading(b) {
   listEl.setAttribute("aria-busy", String(b));
 }
 
-/* ----------------- data load ----------------- */
-
 async function loadPage({ append = false } = {}) {
   if (state.isLoading) return;
   if (!append) {
@@ -117,8 +112,6 @@ async function loadPage({ append = false } = {}) {
   }
 }
 
-/* ----------------- actions ----------------- */
-
 async function handleDelete(id, cardEl) {
   if (!confirm("Delete this post? This cannot be undone.")) return;
 
@@ -143,8 +136,6 @@ async function handleDelete(id, cardEl) {
   }
 }
 
-/* ----------------- events ----------------- */
-
 loadMoreBtn.addEventListener("click", () => loadPage({ append: true }));
 
 listEl.addEventListener("click", (e) => {
@@ -155,8 +146,6 @@ listEl.addEventListener("click", (e) => {
   if (!id) return;
   handleDelete(id, card);
 });
-
-/* ----------------- init ----------------- */
 
 (function init() {
   const name = decodeNameFromToken();

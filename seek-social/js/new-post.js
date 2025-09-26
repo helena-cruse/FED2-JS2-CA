@@ -1,4 +1,3 @@
-// seek-social/js/new-post.js
 import { fetchJson } from "./api.js";
 
 const form = document.getElementById("postForm");
@@ -71,12 +70,10 @@ form.addEventListener("submit", async (e) => {
     const id = created?.id ?? created?.data?.id;
     if (id == null) throw new Error("Missing post id from server.");
 
-    // siden vi er i /posts/, single ligger også i /posts/
     window.location.href = `./single.html?id=${encodeURIComponent(id)}`;
   } catch (err) {
     console.error(err);
     if (err?.status === 401 || /authorization/i.test(err?.message || "")) {
-      // redirect peker tilbake til denne siden i /posts/
       const redirect = encodeURIComponent("/posts/new-post.html");
       window.location.href = `../auth/login.html?redirect=${redirect}`;
       return;

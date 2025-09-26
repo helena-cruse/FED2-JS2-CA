@@ -44,7 +44,6 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify({ name, email, password }),
     });
 
-    // Etter registrering: send til login, forhåndsfyll e-post via query
     const q = new URLSearchParams({ email });
     window.location.href = `./login.html?${q.toString()}`;
   } catch (err) {

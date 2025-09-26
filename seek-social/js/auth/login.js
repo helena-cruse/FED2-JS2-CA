@@ -41,12 +41,10 @@ form.addEventListener("submit", async (e) => {
     const accessToken = payload?.accessToken;
     if (!accessToken) throw new Error("Missing accessToken from response");
 
-    // Lagre token på flere nøkler
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("token", accessToken);
     localStorage.setItem("user", JSON.stringify({ ...payload, accessToken }));
 
-    // Redirect tilbake hvis vi kom fra beskyttet side
     const params = new URLSearchParams(location.search);
     const redirect = params.get("redirect") || "../profile/index.html";
     window.location.href = redirect;

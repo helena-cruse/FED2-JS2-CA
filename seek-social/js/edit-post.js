@@ -1,4 +1,3 @@
-// seek-social/js/edit-post.js
 import { fetchJson, getToken } from "./api.js";
 
 const form = document.getElementById("postForm");
@@ -62,7 +61,6 @@ function currentUserName() {
 async function loadPost() {
   try {
     const p = await fetchJson(`/social/posts/${id}?_author=true`);
-    // Eier-sjekk: kun eier kan redigere/slette
     const me = currentUserName();
     if (!me) {
       const redirect = encodeURIComponent(`/posts/edit-post.html?id=${encodeURIComponent(id)}`);
@@ -75,7 +73,6 @@ async function loadPost() {
       return;
     }
 
-    // Prefill
     titleEl.value = p.title || "";
     bodyEl.value = p.body || "";
     const media = Array.isArray(p.media) ? p.media[0] : p.media;
@@ -116,7 +113,7 @@ form.addEventListener("submit", async (e) => {
 
   const payload = {
     title,
-    ...(body ? { body } : { body: "" }), // tillat clearing
+    ...(body ? { body } : { body: "" }),
     ...(tags.length ? { tags } : { tags: [] }),
     ...(mediaUrl ? { media: { url: mediaUrl, alt: mediaAlt || "" } } : { media: null }),
   };
@@ -128,7 +125,6 @@ form.addEventListener("submit", async (e) => {
       method: "PUT",
       body: JSON.stringify(payload),
     });
-    // tilbake til single
     window.location.href = `./single.html?id=${encodeURIComponent(id)}`;
   } catch (err) {
     console.error(err);
@@ -152,7 +148,6 @@ deleteBtn.addEventListener("click", async () => {
 
   try {
     await fetchJson(`/social/posts/${id}`, { method: "DELETE" });
-    // etter sletting: tilbake til feed
     window.location.href = `./index.html`;
   } catch (err) {
     console.error(err);
@@ -168,5 +163,4 @@ deleteBtn.addEventListener("click", async () => {
   }
 });
 
-// Init
 loadPost();

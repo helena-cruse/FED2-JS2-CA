@@ -2,23 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>SeekSocial</title>
+  <title>SeekSocial - JS2 Course Assignment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/seek-social/css/style.css" />
 </head>
-<body>
+<body class="home-bg">
   <div id="site-header"></div>
 
-  <main class="home-hero">
-    <div class="hero-inner">
-      <h1 class="hero-title">Welcoome to SeekSocial</h1>
-      <p class="hero-text">Log in or register to start seeking!.</p>
-      <div class="hero-cta">
-        <a href="/seek-social/auth/login.html" class="btn">Login</a>
-        <a href="/seek-social/auth/register.html" class="btn">Register</a>
+  <main>
+    <section class="home-hero">
+      <div class="hero-inner">
+        <img src="/seek-social/media/app-logo.png" alt="SeekSocial logo" class="home-logo" />
+        <h1 class="hero-title">Welcome to SeekSocial</h1>
+        <p class="hero-text">A tiny social platform for my JavaScript 2 Course Assignment. Create posts, explore, react, and follow friends.</p>
+        <div class="hero-cta" id="home-cta">
+          <a href="/seek-social/auth/register.html" class="cta cta-primary">Register</a>
+          <a href="/seek-social/auth/login.html" class="cta cta-secondary">Login</a>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <div class="trail" id="trail" aria-hidden="true"></div>
+    <div class="cursor-heart" id="cursorHeart" aria-hidden="true">❤</div>
   </main>
 
   <script src="/seek-social/js/navbar.js" defer></script>
+  <script>
+    (function(){
+      function getStoredToken(){
+        try{ if(typeof window.getToken==="function"){ const t=window.getToken(); if(t&&(t.accessToken||t.token)) return t.accessToken||t.token; } }catch(e){}
+        try{ if(typeof window.getAuth==="function"){ const a=window.getAuth(); if(a&&(a.accessToken||a.token)) return a.accessToken||a.token; } }catch(e){}
+        try{ const v=localStorage.getItem("accessToken"); if(v&&v!=="null"&&v!=="undefined") return v; }catch(e){}
+        try{ const v=localStorage.getItem("token"); if(v&&v!=="null"&&v!=="undefined") return v; }catch(e){}
+        try{ const o=JSON.parse(localStorage.getItem("auth")||"null"); if(o&&(o.accessToken||o.token)) return o.accessToken||o.token; }catch(e){}
+        try{ const o=JSON.parse(localStorage.getItem("profile")||"null"); if(o&&(o.accessToken||o.token)) return o.accessToken||o.token; }catch(e){}
+        return null;
+      }
+      function isValidJwt(t){
+        if(!t||typeof t!=="string") return false;
+        const p=t.split(".");
+        if(p.length!==3) return false;
+        try{
+          const payload=JSON.parse(atob(p[1].replace(/-/g,"+").replace(/_/g,"/")));
+          if(!payload||!payload.exp) return false;
+          return payload.exp*1000>Date.now();
+        }catch(e){ return false; }
+      }
+      const cta=document.getElementById("home-cta");
+      if(cta){
+        if(isValidJwt(getStoredToken())){
+          cta.innerHTML='<a href="/seek-social/posts/index.html" class="cta cta-primary">Open Feed</a><a href="/seek-social/profile/index.html" class="cta cta-secondary">My Profile</a>';
+        }else{
+          cta.innerHTML='<a href="/seek-social/auth/register.html" class="cta cta-primary">Register</a><a href="/seek-social/auth/login.html" class="cta cta-secondary">Login</a>';
+        }
+      }
+
+      const trail=document.getElementById("trail");
+      const cursor=document.getElementById("cursorHeart");
+      const hero=document.querySelector(".home-hero");
+      let last=0;
+      function makeHeart(x,y){
+        const s=document.createElement("span");
+        s.className="heart";
+        s.textContent="❤";
+        const size=14+Math.random()*12;
+        const rot=(Math.random()*40-20);
+        s.style.left=x+"px";
+        s.style.top=y+"px";
+        s.style.fontSize=size+"px";
+        s.style.transform="translate(-50%, -50%) rotate("+rot+"deg)";
+        trail.appendChild(s);
+        s.addEventListener("animationend",()=>s.remove());
+      }
+      function onMove(e){
+        const x=e.clientX,y=e.clientY;
+        cursor.style.transform="translate("+x+"px,"+y+"px)";
+        const now=performance.now();
+        if(now-last>40){ last=now; makeHeart(x,y); }
+      }
+      function onEnter(){ document.body.classList.add("home-cursor"); }
+      function onLeave(){ document.body.classList.remove("home-cursor"); }
+      document.addEventListener("mousemove",onMove);
+      if(hero){ hero.addEventListener("mouseenter",onEnter); hero.addEventListener("mouseleave",onLeave); }
+      window.addEventListener("blur",onLeave);
+    })();
+  </script>
 </body>
 </html>

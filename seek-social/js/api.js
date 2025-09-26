@@ -1,4 +1,4 @@
-export const API_KEY = "1e9020ef-9135-4549-a501-568e3411ccc6"; // behold din
+export const API_KEY = "1e9020ef-9135-4549-a501-568e3411ccc6";
 export const API_BASE = "https://v2.api.noroff.dev";
 
 export const API_AUTH = `${API_BASE}/auth`;

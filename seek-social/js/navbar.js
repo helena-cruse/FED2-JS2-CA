@@ -34,6 +34,7 @@
   const LINKS_AUTH = [
     { href: ROOT + "index.html",         label: "Home",       key: "home" },
     { href: ROOT + "posts/index.html",   label: "Feed",       key: "feed" },
+    { href: ROOT + "posts/new-post.html",label: "New Post",   key: "new" },
     { href: ROOT + "profile/index.html", label: "My profile", key: "profile" },
   ];
   const LINKS_ANON = [
@@ -101,5 +102,3 @@
   window.addEventListener("focus", renderNavbar);
   window.addEventListener("pageshow", renderNavbar);
 })();
-
-  

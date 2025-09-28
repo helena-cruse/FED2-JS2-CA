@@ -48,12 +48,12 @@
           return payload.exp*1000>Date.now();
         }catch(e){ return false; }
       }
-      const cta=document.getElementById("home-cta");
+       const cta=document.getElementById("home-cta");
       if(cta){
         if(isValidJwt(getStoredToken())){
-          cta.innerHTML='<a href="/seek-social/posts/index.html" class="cta cta-primary">Open Feed</a><a href="/seek-social/profile/index.html" class="cta cta-secondary">My Profile</a>';
+          cta.innerHTML='<a href="./posts/index.html" class="cta cta-primary">Open Feed</a><a href="./profile/index.html" class="cta cta-secondary">My Profile</a>';
         }else{
-          cta.innerHTML='<a href="/seek-social/auth/register.html" class="cta cta-primary">Register</a><a href="/seek-social/auth/login.html" class="cta cta-secondary">Login</a>';
+          cta.innerHTML='<a href="./auth/register.html" class="cta cta-primary">Register</a><a href="./auth/login.html" class="cta cta-secondary">Login</a>';
         }
       }
 

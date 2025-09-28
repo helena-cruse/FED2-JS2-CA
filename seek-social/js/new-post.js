@@ -1,14 +1,37 @@
 (function () {
-  const API_BASE = "https://v2.api.noroff.dev";
-
+  function apiRoot() {
+    const a = window.api || window.API || {};
+    return a.base || a.BASE_URL || a.API_BASE || "";
+  }
   function getToken() {
-    try { if (typeof window.getToken === "function") { const t = window.getToken(); if (t && (t.accessToken || t.token)) return t.accessToken || t.token; } } catch {}
-    try { if (typeof window.getAuth === "function") { const a = window.getAuth(); if (a && (a.accessToken || a.token)) return a.accessToken || a.token; } } catch {}
-    try { const a = JSON.parse(localStorage.getItem("auth") || "{}"); if (a && (a.accessToken || a.token)) return a.accessToken || a.token; } catch {}
+    const a = window.api || window.API || {};
+    try { if (typeof a.getToken === "function") { const t = a.getToken(); if (t) return t.accessToken || t.token || t; } } catch {}
+    try { if (typeof a.getAuth === "function") { const au = a.getAuth(); if (au) return au.accessToken || au.token; } } catch {}
+    try { const au = JSON.parse(localStorage.getItem("auth") || "{}"); if (au) return au.accessToken || au.token; } catch {}
     try { const t = localStorage.getItem("accessToken") || localStorage.getItem("token"); if (t) return t; } catch {}
     return null;
   }
-
+  async function apiRequest(path, { method = "GET", body, auth = false } = {}) {
+    const a = window.api || window.API || {};
+    const base = apiRoot();
+    const token = auth ? getToken() : null;
+    if (typeof a.request === "function") {
+      return a.request(path, { method, body, auth: auth ? true : false });
+    }
+    if (typeof a.authRequest === "function" && auth) {
+      return a.authRequest(path, { method, body });
+    }
+    const url = base ? `${base}${path}` : path;
+    const headers = { "Content-Type": "application/json" };
+    if (auth && token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.errors?.[0]?.message || data?.message || `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+    return data;
+  }
   function qs(sel, root = document) { return root.querySelector(sel); }
   function getField(name, fallbackId) { return qs(`[name="${name}"]`) || (fallbackId ? qs(`#${fallbackId}`) : null); }
   function getText(el) { return (el && typeof el.value === "string") ? el.value.trim() : ""; }
@@ -16,43 +39,15 @@
   function setBusy(el, busy) { if (!el) return; el.disabled = !!busy; el.setAttribute("aria-busy", busy ? "true" : "false"); }
   function showMessage(id, text) { const box = qs(id); if (box) { box.textContent = text; box.hidden = !text; } else if (text) { alert(text); } }
 
-  async function apiPost(path, body, token) {
-    const res = await fetch(`${API_BASE}${path}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = (data && (data.errors?.[0]?.message || data.message)) || `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    return data;
-  }
-
-  async function apiGet(path, token) {
-    const res = await fetch(`${API_BASE}${path}`, {
-      headers: token ? { Authorization: `Bearer ${token}`, "Cache-Control": "no-cache" } : { "Cache-Control": "no-cache" },
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      const msg = (data && (data.errors?.[0]?.message || data.message)) || `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    return data;
-  }
-
   async function createPost({ title, body, mediaUrl, tags }) {
     const token = getToken();
     if (!token) throw new Error("not_authenticated");
     const payload = { title, body };
     if (tags && tags.length) payload.tags = tags;
     if (mediaUrl) payload.media = { url: mediaUrl, alt: title || "post media" };
-    const created = await apiPost("/social/posts", payload, token);
+    const created = await apiRequest("/social/posts", { method: "POST", body: payload, auth: true });
     const id = created?.data?.id || created?.id;
-    if (id) {
-      await apiGet(`/social/posts/${encodeURIComponent(id)}`, token);
-    }
+    if (id) await apiRequest(`/social/posts/${encodeURIComponent(id)}`, { auth: true });
     return id;
   }
 
@@ -96,4 +91,5 @@
     });
   });
 })();
+
 

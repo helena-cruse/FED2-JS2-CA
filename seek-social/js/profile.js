@@ -9,17 +9,11 @@ const state = { name: null, limit: 20, offset: 0, hasMore: true, isLoading: fals
 function decodeNameFromToken() {
   const token = getToken();
   if (!token) return null;
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1] || ""));
-    return payload?.name || payload?.username || payload?.sub || null;
-  } catch {
-    return null;
-  }
+  try { const payload = JSON.parse(atob(token.split(".")[1] || "")); return payload?.name || payload?.username || payload?.sub || null; }
+  catch { return null; }
 }
 
-function fmtDate(iso) {
-  try { return new Date(iso).toLocaleString(); } catch { return ""; }
-}
+function fmtDate(iso) { try { return new Date(iso).toLocaleString(); } catch { return ""; } }
 
 function getPrimaryMedia(p) {
   const m = p?.media;
@@ -36,14 +30,12 @@ function postCard(p) {
   const preview = text.slice(0, 160);
   const reactions = p._count?.reactions ?? 0;
   const comments = p._count?.comments ?? 0;
-
   return `
     <article class="card" data-id="${p.id}">
       ${media ? `<img class="thumb" src="${media.url}" alt="${media.alt}" loading="lazy">` : ""}
       <h3 class="title">${p.title || "(untitled)"}</h3>
       <p class="meta">${created ? `Created ${created}` : ""}</p>
       ${text ? `<p class="excerpt">${preview}${text.length > 160 ? "…" : ""}</p>` : ""}
-
       <div class="actions">
         <span class="btn-icon" title="Reactions">👍 <span class="count">${reactions}</span></span>
         <span class="btn-icon" title="Comments">💬 <span class="count">${comments}</span></span>
@@ -70,9 +62,7 @@ async function loadPage({ append = false } = {}) {
     listEl.innerHTML = "";
   }
   if (!state.hasMore) return;
-
   setLoading(true);
-
   const params = new URLSearchParams({
     limit: String(state.limit),
     offset: String(state.offset),
@@ -81,19 +71,17 @@ async function loadPage({ append = false } = {}) {
     _author: "true",
     _reactions: "true",
     _comments: "true",
+    fresh: String(Date.now())
   });
-
   try {
     const path = `/social/profiles/${encodeURIComponent(state.name)}/posts?${params.toString()}`;
-    const items = await fetchJson(path);
-    const list = Array.isArray(items) ? items : [];
-
+    const res = await fetchJson(path);
+    const list = Array.isArray(res?.data) ? res.data : (Array.isArray(res) ? res : []);
     if (!append && list.length === 0) {
       listEl.innerHTML = `<p>You haven’t posted anything yet.</p>`;
     } else {
       listEl.insertAdjacentHTML("beforeend", list.map(postCard).join(""));
     }
-
     state.offset += list.length;
     state.hasMore = list.length === state.limit;
     loadMoreBtn.hidden = !state.hasMore;
@@ -114,10 +102,8 @@ async function loadPage({ append = false } = {}) {
 
 async function handleDelete(id, cardEl) {
   if (!confirm("Delete this post? This cannot be undone.")) return;
-
   const btn = cardEl.querySelector('button[data-delete]');
   if (btn) btn.disabled = true;
-
   try {
     await fetchJson(`/social/posts/${id}`, { method: "DELETE" });
     cardEl.remove();
@@ -155,6 +141,6 @@ listEl.addEventListener("click", (e) => {
     return;
   }
   state.name = name;
-  whoEl.textContent = `Logged in as ${name}`;
+  if (whoEl) whoEl.textContent = `Logged in as ${name}`;
   loadPage();
 })();
